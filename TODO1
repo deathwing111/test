@@ -1,0 +1,65 @@
+Sure, I can help you with the TODO parts of your code. 😊
+
+Let me explain what you need to do for each part:
+
+- For the game over condition, you need to check if the hero belongs to the player or the opponent, and then end the game accordingly. For example, you can use a boolean property called IsPlayer to indicate which side the hero is on, and then use an event called GameOver to trigger the game over logic. Here is a possible code snippet:
+
+```csharp
+if (!IsAlive()) // If the hero is dead
+{
+    if (IsPlayer) // If the hero belongs to the player
+    {
+        GameOver(false); // Trigger the game over event with false as the argument, indicating the player lost
+    }
+    else // If the hero belongs to the opponent
+    {
+        GameOver(true); // Trigger the game over event with true as the argument, indicating the player won
+    }
+}
+```
+
+- For the health limit condition, you need to make sure that the hero's health does not exceed a certain value, usually 30. For example, you can use a constant called MaxHealth to store the maximum health value, and then use a property called CurrentHealth to store the current health value. Here is a possible code snippet:
+
+```csharp
+public const int MaxHealth = 30; // Declare a constant for the maximum health
+public int CurrentHealth { get; set; } // Declare a property for the current health
+
+// Heal the hero by an amount
+public void Heal(int amount)
+{
+    CurrentHealth += amount; // Increase the current health by the amount
+    if (CurrentHealth > MaxHealth) // If the current health exceeds the maximum health
+    {
+        CurrentHealth = MaxHealth; // Set the current health to the maximum health
+    }
+}
+```
+
+- For the condition for attacking with the hero, you need to check if the hero has a weapon equipped, and if the weapon has any durability left. For example, you can use a property called Weapon to store the weapon object, and then use a property called Durability to store the weapon's durability. Here is a possible code snippet:
+
+```csharp
+// Check if the hero can attack
+public bool CanAttack()
+{
+    return Weapon != null && Weapon.Durability > 0; // Return true if the weapon is not null and the durability is positive, false otherwise
+}
+```
+
+- For the logic for attacking with the hero, you need to make the hero deal damage to the target equal to the weapon's attack value, and then reduce the weapon's durability by one. For example, you can use a property called Attack to store the weapon's attack value, and then use a method called TakeDamage to make the target take damage. Here is a possible code snippet:
+
+```csharp
+// Attack another minion or the enemy hero
+public void Attack(IAttackable target)
+{
+    target.TakeDamage(this, Weapon.Attack); // Make the target take damage equal to the weapon's attack value
+    Weapon.Durability--; // Reduce the weapon's durability by one
+}
+```
+
+I hope this helps you with your code. 😊
+
+If you have any other questions or need more help, please let me know. 👍
+
+Or, if you want to chat about something else, I'm happy to do that too. 😊
+
+What would you like to do next? 🤔
