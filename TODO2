@@ -1,0 +1,65 @@
+// Define a class for the hero power class HeroPower { // Initialize the hero power with a name and an effect public HeroPower(string name, Action<Player> effect) { Name = name; // A string Effect = effect; // A function }
+// Properties for the hero power's attributes
+public string Name { get; set; }
+public Action<Player> Effect { get; set; }
+
+// Check if the hero power can be used public bool CanUse() { // Get the player who owns the hero power Player owner = this.GetOwner(); // Check if the player has enough mana if (owner.Mana < this.ManaCost) { return false; } // Check if the hero power is not on cooldown if (owner.HeroPowerCooldown > 0) { return false; } // Check if there are any other restrictions // For example, if the hero power can only be used on certain targets if (this.TargetRestriction != null && !this.TargetRestriction.IsValid(owner)) { return false; } // If all checks pass, the hero power can be used return true; }
+}
+
+
+
+
+// Define a class for the card class Card { // Initialize the card with a name, a type, a cost, and an effect public Card(string name, string type, int cost, Action<Player> effect) { Name = name; // A string Type = type; // A string Cost = cost; // An integer Effect = effect; // A function }
+// Properties for the card's attributes
+public string Name { get; set; }
+public string Type { get; set; }
+public int Cost { get; set; }
+public Action<Player> Effect { get; set; }
+}
+// Define a class for the minion class Minion : Card, IAttackable { // Initialize the minion with a name, a cost, an effect, an attack, and a health public Minion(string name, int cost, Action<Player> effect, int attack, int health) : base(name, “Minion”, cost, effect) { // Call the parent class constructor Attack = attack; // An integer Health = health; // An integer }
+// Properties for the minion's attributes
+public int Attack { get; set; }
+public int Health { get; set; }
+
+// Check if the minion can attack public bool CanAttack() { // Get the player who owns the minion Player owner = this.GetOwner(); // Check if the minion has enough attack if (this.Attack <= 0) { return false; } // Check if the minion is frozen if (this.IsFrozen) { return false; } // Check if there are any other restrictions // For example, if the minion can only attack certain targets if (this.AttackRestriction != null && !this.AttackRestriction.IsValid(owner)) { return false; } // If all checks pass, the minion can attack return true; }
+// Attack another minion or the enemy hero public void Attack(IAttackable target) { // Deal damage to the target equal to the minion’s attack target.TakeDamage(this, this.Attack); // Trigger any effects that happen when the minion attacks // For example, if the minion has lifesteal, heal the owner if (this.HasLifesteal) { this.GetOwner().Heal(this.Attack); } // Check if the target is dead if (!target.IsAlive()) { // Trigger any effects that happen when the target dies // For example, if the minion has deathrattle, activate it if (target is Minion && (target as Minion).HasDeathrattle) { (target as Minion).ActivateDeathrattle(); } } }
+// Take damage from an attacker public void TakeDamage(IAttackable attacker, int damage) { Health -= damage; // Reduce the health by the damage if (!IsAlive()) // If the minion is dead { // Remove the minion from the owner’s board this.GetOwner().RemoveMinion(this); // Trigger any effects that happen when the minion dies // For example, if the minion has deathrattle, activate it if (this.HasDeathrattle) { this.ActivateDeathrattle(); } // Check if the game is over // For example, if the owner has no more minions and no more cards, they lose if (this.GetOwner().HasNoMinions() && this.GetOwner().HasNoCards()) { this.GetOwner().Lose(); } } }
+// Check if the minion is alive
+public bool IsAlive()
+{
+    return Health > 0; // Return true if the health is positive, false otherwise
+}
+}
+
+
+
+// Heal the minion by an amount public void Heal(int amount) { Health += amount; // Increase the health by the amount // Check if the health of the minion exceeds its maximum health if (Health > MaxHealth) { // Set the health to the maximum health Health = MaxHealth; } }
+// Check if the minion is alive public bool IsAlive() { return Health > 0; // Return true if the health is positive, false otherwise }
+// Define a class for the spell public class Spell : Card { // Initialize the spell with a name, a cost, and an effect public Spell(string name, int cost, Action<Player> effect) : base(name, “Spell”, cost, effect) { // Call the parent class constructor } }
+// Define a class for the weapon public class Weapon : Card { // Initialize the weapon with a name, a cost, an effect, an attack, and a durability public Weapon(string name, int cost, Action<Player> effect, int attack, int durability) : base(name, “Weapon”, cost, effect) { // Call the parent class constructor Attack = attack; // An integer Durability = durability; // An integer }
+// The attack of the weapon
+public int Attack { get; set; }
+
+// The durability of the weapon
+public int Durability { get; set; }
+
+// Check if the weapon can be used
+public bool CanUse()
+{
+    return Durability > 0; // Return true if the durability is positive, false otherwise
+}
+
+// Use the weapon to attack a target public void Use(IAttackable target) { // Deal damage to the target equal to the weapon’s attack target.TakeDamage(this, this.Attack); // Trigger any effects that happen when the weapon is used // For example, if the weapon has lifesteal, heal the owner if (this.HasLifesteal) { this.GetOwner().Heal(this.Attack); } // Reduce the durability of the weapon by one this.Durability–; }
+// Take damage from an attacker public void TakeDamage(IAttackable attacker, int damage) { Durability -= damage; // Reduce the durability by the damage if (!CanUse()) // If the weapon is broken { // Remove the weapon from the hero’s hand this.GetOwner().RemoveWeapon(this); // Trigger any effects that happen when the weapon is broken // For example, if the weapon has deathrattle, activate it if (this.HasDeathrattle) { this.ActivateDeathrattle(); } // Check if the game is over // For example, if the owner has no more weapons and no more cards, they lose if (this.GetOwner().HasNoWeapons() && this.GetOwner().HasNoCards()) { this.GetOwner().Lose(); } } }
+}
+
+
+
+
+
+
+
+// Define a function to start the game public void StartGame() { // Create two players Player player1 = new Player(“Player 1”); Player player2 = new Player(“Player 2”); // Shuffle their decks player1.ShuffleDeck(); player2.ShuffleDeck(); // Draw their initial cards // For example, if each player starts with 3 cards player1.DrawCards(3); player2.DrawCards(3); // Determine who goes first // For example, if the player who has the coin card goes first if (player1.HasCoin()) { CurrentPlayer = player1; } else { CurrentPlayer = player2; } }
+// Define a function to end the game public void EndGame() { // Display the result of the game // For example, if the player who has no more health or no more cards loses if (player1.HasNoHealth() || player1.HasNoCards()) { Console.WriteLine(“Player 2 wins!”); } else { Console.WriteLine(“Player 1 wins!”); } // Congratulate the winner // For example, if the winner is the current player Console.WriteLine(“Congratulations, {0}!”, CurrentPlayer.Name); // Ask the players if they want to play again // For example, if the players can input Y or N Console.WriteLine(“Do you want to play again? (Y/N)”); string input = Console.ReadLine(); if (input == “Y” || input == “y”) { // Restart the game StartGame(); } else { // Exit the game Console.WriteLine(“Thank you for playing!”); Environment.Exit(0); } }
+// Define a function to run the game loop public void RunGame() { StartGame(); // Start the game while (true) // Repeat until the game ends { // Let the player play cards // For example, if the player can input the index of the card they want to play Console.WriteLine(“{0}, it’s your turn. Your hand is:”, CurrentPlayer.Name); CurrentPlayer.ShowHand(); Console.WriteLine(“Which card do you want to play? (Enter the index or 0 to skip)”); int index = int.Parse(Console.ReadLine()); if (index > 0 && index <= CurrentPlayer.Hand.Count) { // Play the card at the given index CurrentPlayer.PlayCard(index); // Check if the game is over if (IsGameOver()) { break; } } // Let the player use their hero power // For example, if the player can input H to use their hero power Console.WriteLine(“Do you want to use your hero power? (Enter H or 0 to skip)”); string input = Console.ReadLine(); if (input == “H” || input == “h”) { // Use the hero power CurrentPlayer.UseHeroPower(); // Check if the game is over if (IsGameOver()) { break; } } // Let the player attack with their minions or weapon // For example, if the player can input the index of the attacker and the target Console.WriteLine(“Do you want to attack with your minions or weapon? (Enter the index of the attacker and the target or 0 to skip)”); string[] inputs = Console.ReadLine().Split(); if (inputs.Length == 2) { // Get the attacker and the target IAttackable attacker = CurrentPlayer.GetAttacker(int.Parse(inputs[0])); IAttackable target = CurrentPlayer.GetTarget(int.Parse(inputs[1])); // Attack with the attacker and the target CurrentPlayer.Attack(attacker, target); // Check if the game is over if (IsGameOver()) { break; } } // Let the player end their turn // For example, if the player can input E to end their turn Console.WriteLine(“Do you want to end your turn? (Enter E or 0 to skip)”); input = Console.ReadLine(); if (input == “E” || input == “e”) { // End the turn CurrentPlayer.EndTurn(); // Switch to the other player CurrentPlayer = CurrentPlayer.GetOpponent(); // Start the next turn CurrentPlayer.StartTurn(); } } EndGame(); // End the game }
+// Run the game RunGame();
