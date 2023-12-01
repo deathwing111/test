@@ -1,0 +1,130 @@
+// Define a class for the player
+public class Player
+{
+    // ... (previous code)
+
+    // Draw a card from the deck and add it to the hand
+    public void Draw()
+    {
+        if (Deck.Count > 0) // If the deck is not empty
+        {
+            Card card = Deck[Deck.Count - 1]; // Remove the last card from the deck
+            Deck.RemoveAt(Deck.Count - 1);
+            Hand.Add(card); // Add the card to the hand
+        }
+        else // If the deck is empty
+        {
+            // TODO: Implement the game over condition
+            Console.WriteLine("Game Over - Player has no cards left in the deck.");
+        }
+    }
+
+    // Gain one mana crystal, up to a maximum of 10
+    public void GainMana()
+    {
+        if (Mana < 10) // If the mana is less than 10
+        {
+            Mana++; // Increase the mana by 1
+        }
+    }
+
+    // Play a card from the hand by spending mana equal to the card’s cost
+    public void Play(Card card)
+    {
+        if (Hand.Contains(card) && card.Cost <= Mana) // If the card is in the hand and the player has enough mana
+        {
+            Hand.Remove(card); // Remove the card from the hand
+            Mana -= card.Cost; // Reduce the mana by the card’s cost
+            card.Effect(this); // Apply the card’s effect
+        }
+    }
+
+    // Attack with the hero or a minion
+    public void Attack(IAttackable attacker, IAttackable target)
+    {
+        if (attacker.CanAttack()) // If the attacker can attack
+        {
+            attacker.Attack(target); // Make the attacker attack the target
+        }
+    }
+
+    // Use the hero power by spending 1 mana
+    public void UsePower()
+    {
+        if (Mana >= 1 && HeroPower.CanUse()) // If the player has enough mana and the hero power can be used
+        {
+            Mana--; // Reduce the mana by 1
+            HeroPower.Effect(this); // Apply the hero power’s effect
+        }
+    }
+}
+
+// Define a class for the hero
+public class Hero : IAttackable
+{
+    // ... (previous code)
+
+    // Check if the hero can attack
+    public bool CanAttack()
+    {
+        // TODO: Implement the condition for attacking with the hero
+        return false;
+    }
+
+    // Attack another minion or the enemy hero
+    public void Attack(IAttackable target)
+    {
+        // TODO: Implement the logic for attacking with the hero
+    }
+}
+
+// Define a class for the hero power
+public class HeroPower
+{
+    // ... (previous code)
+
+    // Check if the hero power can be used
+    public bool CanUse()
+    {
+        // TODO: Implement the condition for using the hero power
+        return false;
+    }
+}
+
+// ... (continue with the rest of the classes and functions)
+
+// Define a function to start the game
+public void StartGame()
+{
+    // TODO: Implement the logic for starting the game
+    Console.WriteLine("Game Started!");
+}
+
+// Define a function to end the game
+public void EndGame()
+{
+    // TODO: Implement the logic for ending the game
+    Console.WriteLine("Game Ended!");
+}
+
+// Define a function to run the game loop
+public void RunGame()
+{
+    StartGame(); // Start the game
+    while (true) // Repeat until the game ends
+    {
+        // TODO: Implement the logic for each player’s turn
+        Console.WriteLine("Player's Turn");
+        // Example: players[0].Draw();
+        // Example: players[0].Play(someCard);
+        // Example: players[0].Attack(someAttacker, someTarget);
+        // Example: players[0].UsePower();
+
+        // TODO: Check game-ending conditions and break the loop if necessary
+        break;
+    }
+    EndGame(); // End the game
+}
+
+// Run the game
+RunGame();
