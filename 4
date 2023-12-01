@@ -1,0 +1,97 @@
+    public List<Card> Hand { get; set; }
+    public int Mana { get; set; }
+    public Weapon Weapon { get; set; }
+    public HeroPower HeroPower { get; set; }
+
+    // Constructor
+    public Player(Hero hero, List<Card> deck)
+    {
+        Hero = hero; // A Hero object
+        Deck = deck; // A list of Card objects
+        Hand = new List<Card>(); // A list of Card objects
+        Mana = 0; // An integer
+        Weapon = null; // A Weapon object or null
+        HeroPower = hero.Power; // A HeroPower object
+    }
+
+    // Draw a card from the deck and add it to the hand
+    public void Draw()
+    {
+        if (Deck.Count > 0) // If the deck is not empty
+        {
+            Card card = Deck[Deck.Count - 1]; // Remove the last card from the deck
+            Deck.RemoveAt(Deck.Count - 1);
+            Hand.Add(card); // Add the card to the hand
+        }
+        else // If the deck is empty
+        {
+            // TODO: Implement the game over condition
+            Console.WriteLine("Game Over - Deck is empty!");
+        }
+    }
+
+    // Gain one mana crystal, up to a maximum of 10
+    public void GainMana()
+    {
+        if (Mana < 10) // If the mana is less than 10
+        {
+            Mana++; // Increase the mana by 1
+        }
+    }
+
+    // Play a card from the hand by spending mana equal to the card’s cost
+    public void Play(Card card)
+    {
+        if (Hand.Contains(card) && card.Cost <= Mana) // If the card is in the hand and the player has enough mana
+        {
+            Hand.Remove(card); // Remove the card from the hand
+            Mana -= card.Cost; // Reduce the mana by the card’s cost
+            card.Effect(this); // Apply the card’s effect
+        }
+    }
+
+    // Attack with the hero or a minion
+    public void Attack(IAttackable attacker, IAttackable target)
+    {
+        if (attacker.CanAttack()) // If the attacker can attack
+        {
+            attacker.Attack(target); // Make the attacker attack the target
+        }
+    }
+
+    // Use the hero power by spending 1 mana
+    public void UsePower()
+    {
+        if (Mana >= 1 && HeroPower.CanUse()) // If the player has enough mana and the hero power can be used
+        {
+            Mana--; // Reduce the mana by 1
+            HeroPower.Effect(this); // Apply the hero power’s effect
+        }
+    }
+}
+
+// Define a function to start the game
+public void StartGame()
+{
+    // TODO: Implement the logic for starting the game
+}
+
+// Define a function to end the game
+public void EndGame()
+{
+    // TODO: Implement the logic for ending the game
+}
+
+// Define a function to run the game loop
+public void RunGame()
+{
+    StartGame(); // Start the game
+    while (true) // Repeat until the game ends
+    {
+        // TODO: Implement the logic for each player’s turn
+    }
+    EndGame(); // End the game
+}
+
+// Run the game
+RunGame();
