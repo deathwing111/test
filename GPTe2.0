@@ -242,4 +242,70 @@ public class Player
 {
     // Properties for the player's attributes
     public Hero Hero { get; set; }
-    public List<Card> Deck { get; set;
+    public List<Card> Deck { get; set;}
+
+
+
+Implement the missing logic for the Draw method in the Player class. This includes the game over condition when the deck is empty.
+
+Implement the missing logic for the TakeDamage method in the Hero class. This includes the game over condition when the hero is dead.
+
+Implement the missing logic for the UsePower method in the Player class. This includes the condition for using the hero power.
+
+Implement the missing logic for the CanAttack and Attack methods in the Hero and Minion classes.
+
+Implement the missing logic for the Use method in the Weapon class.
+
+Implement the missing logic for the IsAlive method in the Minion class.
+
+Implement the missing logic for the StartGame, EndGame, and the game loop in the RunGame method.
+
+Fill in any other missing logic in the code, particularly in the methods with TODO comments.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
