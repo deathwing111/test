@@ -1,0 +1,245 @@
+using System;
+using System.Collections.Generic;
+
+// Define an interface for the attackable entities
+public interface IAttackable
+{
+    // Check if the entity can attack
+    bool CanAttack();
+
+    // Attack another entity
+    void Attack(IAttackable target);
+
+    // Take damage from an attacker
+    void TakeDamage(IAttackable attacker, int damage);
+}
+
+// Define a class for the card
+public class Card
+{
+    // Properties for the card's attributes
+    public string Name { get; set; }
+    public string Type { get; set; }
+    public int Cost { get; set; }
+    public Action<Player> Effect { get; set; }
+
+    // Constructor
+    public Card(string name, string type, int cost, Action<Player> effect)
+    {
+        Name = name; // A string
+        Type = type; // A string
+        Cost = cost; // An integer
+        Effect = effect; // A function
+    }
+}
+
+// Define a class for the minion
+public class Minion : Card, IAttackable
+{
+    // Properties for the minion's attributes
+    public int Attack { get; set; }
+    public int Health { get; set; }
+
+    // Constructor
+    public Minion(string name, int cost, Action<Player> effect, int attack, int health)
+        : base(name, "Minion", cost, effect)
+    {
+        Attack = attack; // An integer
+        Health = health; // An integer
+    }
+
+    // Check if the minion can attack
+    public bool CanAttack()
+    {
+        // TODO: Implement the condition for attacking with the minion
+        return false;
+    }
+
+    // Attack another minion or the enemy hero
+    public void Attack(IAttackable target)
+    {
+        // TODO: Implement the logic for attacking with the minion
+    }
+
+    // Take damage from an attacker
+    public void TakeDamage(IAttackable attacker, int damage)
+    {
+        Health -= damage; // Reduce the health by the damage
+        if (!IsAlive()) // If the minion is dead
+        {
+            // TODO: Implement the logic for removing the minion from the board
+        }
+    }
+
+    // Heal the minion by an amount
+    public void Heal(int amount)
+    {
+        Health += amount; // Increase the health by the amount
+        // TODO: Implement the health limit condition
+    }
+
+    // Check if the minion is alive
+    public bool IsAlive()
+    {
+        return Health > 0; // Return true if the health is positive, false otherwise
+    }
+}
+
+// Define a class for the spell
+public class Spell : Card
+{
+    // Constructor
+    public Spell(string name, int cost, Action<Player> effect)
+        : base(name, "Spell", cost, effect)
+    {
+        // Call the parent class constructor
+    }
+}
+
+// Define a class for the weapon
+public class Weapon : Card
+{
+    // Properties for the weapon's attributes
+    public int Attack { get; set; }
+    public int Durability { get; set; }
+
+    // Constructor
+    public Weapon(string name, int cost, Action<Player> effect, int attack, int durability)
+        : base(name, "Weapon", cost, effect)
+    {
+        Attack = attack; // An integer
+        Durability = durability; // An integer
+    }
+
+    // Check if the weapon can be used
+    public bool CanUse()
+    {
+        return Durability > 0; // Return true if the durability is positive, false otherwise
+    }
+
+    // Use the weapon to attack a target
+    public void Use(IAttackable target)
+    {
+        // TODO: Implement the logic for using the weapon
+    }
+
+    // Take damage from an attacker
+    public void TakeDamage(IAttackable attacker, int damage)
+    {
+        Durability -= damage; // Reduce the durability by the damage
+        if (!CanUse()) // If the weapon is broken
+        {
+            // TODO: Implement the logic for removing the weapon from the hero
+        }
+    }
+}
+
+// Define a class for the location
+public class Location : Card
+{
+    // Constructor
+    public Location(string name, int cost, Action<Player> effect)
+        : base(name, "Location", cost, effect)
+    {
+        // Call the parent class constructor
+    }
+}
+
+// Define a class for the hero card
+public class HeroCard : Card
+{
+    // Properties for the hero card's attributes
+    public Hero NewHero { get; set; }
+    public int Armor { get; set; }
+
+    // Constructor
+    public HeroCard(string name, int cost, Action<Player> effect, Hero newHero, int armor)
+        : base(name, "Hero", cost, effect)
+    {
+        NewHero = newHero; // A Hero object
+        Armor = armor; // An integer
+    }
+}
+
+// Define a class for the hero power
+public class HeroPower
+{
+    // Properties for the hero power's attributes
+    public string Name { get; set; }
+    public Action<Player> Effect { get; set; }
+
+    // Constructor
+    public HeroPower(string name, Action<Player> effect)
+    {
+        Name = name; // A string
+        Effect = effect; // A function
+    }
+
+    // Check if the hero power can be used
+    public bool CanUse()
+    {
+        // TODO: Implement the condition for using the hero power
+        return false;
+    }
+}
+
+// Define a class for the hero
+public class Hero : IAttackable
+{
+    // Properties for the hero's attributes
+    public string Name { get; set; }
+    public int Health { get; set; }
+    public HeroPower Power { get; set; }
+
+    // Constructor
+    public Hero(string name, int health, HeroPower power)
+    {
+        Name = name; // A string
+        Health = health; // An integer
+        Power = power; // A HeroPower object
+    }
+
+    // Check if the hero is alive
+    public bool IsAlive()
+    {
+        return Health > 0; // Return true if the health is positive, false otherwise
+    }
+
+    // Take damage from an attacker
+    public void TakeDamage(IAttackable attacker, int damage)
+    {
+        Health -= damage; // Reduce the health by the damage
+        if (!IsAlive()) // If the hero is dead
+        {
+            // TODO: Implement the game over condition
+            Console.WriteLine($"Game Over - {Name} is defeated!");
+        }
+    }
+
+    // Heal the hero by an amount
+    public void Heal(int amount)
+    {
+        Health += amount; // Increase the health by the amount
+        // TODO: Implement the health limit condition
+    }
+
+    // Check if the hero can attack
+    public bool CanAttack()
+    {
+        // TODO: Implement the condition for attacking with the hero
+        return false;
+    }
+
+    // Attack another minion or the enemy hero
+    public void Attack(IAttackable target)
+    {
+        // TODO: Implement the logic for attacking with the hero
+    }
+}
+
+// Define a class for the player
+public class Player
+{
+    // Properties for the player's attributes
+    public Hero Hero { get; set; }
+    public List<Card> Deck { get; set;
