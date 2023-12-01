@@ -1,0 +1,168 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+//定义一个枚举类型，表示卡牌的种类
+public enum CardType
+{
+    Minion, //随从卡
+    Spell, //法术卡
+    Weapon, //武器卡
+    Hero //英雄卡
+}
+
+//定义一个枚举类型，表示卡牌的品质
+public enum CardQuality
+{
+    Common, //普通
+    Rare, //稀有
+    Epic, //史诗
+    Legendary //传说
+}
+
+//定义一个类，表示卡牌的基本属性和方法
+public class Card
+{
+    public string name; //卡牌的名称
+    public CardType type; //卡牌的种类
+    public CardQuality quality; //卡牌的品质
+    public int cost; //卡牌的费用
+    public Sprite image; //卡牌的图片
+    public GameObject cardObject; //卡牌的游戏对象
+    public Text nameText; //卡牌的名称文本
+    public Text costText; //卡牌的费用文本
+    public Image qualityImage; //卡牌的品质图片
+    public Image cardImage; //卡牌的卡面图片
+
+    //构造函数，根据参数初始化卡牌的属性
+    public Card(string name, CardType type, CardQuality quality, int cost, Sprite image)
+    {
+        this.name = name;
+        this.type = type;
+        this.quality = quality;
+        this.cost = cost;
+        this.image = image;
+    }
+
+    //生成卡牌的游戏对象，根据卡牌的属性设置游戏对象的组件
+    public void GenerateCardObject()
+    {
+        //创建一个空的游戏对象，作为卡牌的游戏对象
+        cardObject = new GameObject(name);
+
+        //添加一个矩形变换组件，设置卡牌的位置和大小
+        RectTransform rectTransform = cardObject.AddComponent<RectTransform>();
+        rectTransform.anchoredPosition = Vector2.zero;
+        rectTransform.sizeDelta = new Vector2(100, 150);
+
+        //添加一个画布渲染器组件，使卡牌可以显示在画布上
+        cardObject.AddComponent<CanvasRenderer>();
+
+        //添加一个图像组件，设置卡牌的背景图片
+        Image backgroundImage = cardObject.AddComponent<Image>();
+        backgroundImage.sprite = Resources.Load<Sprite>("CardBackground"); //从资源文件夹中加载卡牌的背景图片
+
+        //创建一个子游戏对象，作为卡牌的名称文本
+        GameObject nameObject = new GameObject("Name");
+        nameObject.transform.SetParent(cardObject.transform); //设置父游戏对象为卡牌的游戏对象
+
+        //添加一个矩形变换组件，设置卡牌的名称文本的位置和大小
+        RectTransform nameTransform = nameObject.AddComponent<RectTransform>();
+        nameTransform.anchoredPosition = new Vector2(0, 60);
+        nameTransform.sizeDelta = new Vector2(80, 20);
+
+        //添加一个画布渲染器组件，使卡牌的名称文本可以显示在画布上
+        nameObject.AddComponent<CanvasRenderer>();
+
+        //添加一个文本组件，设置卡牌的名称文本的内容和样式
+        nameText = nameObject.AddComponent<Text>();
+        nameText.text = name; //设置文本内容为卡牌的名称
+        nameText.font = Resources.Load<Font>("Arial"); //设置文本字体为Arial
+        nameText.fontSize = 16; //设置文本字号为16
+        nameText.color = Color.black; //设置文本颜色为黑色
+        nameText.alignment = TextAnchor.MiddleCenter; //设置文本对齐方式为居中
+
+        //创建一个子游戏对象，作为卡牌的费用文本
+        GameObject costObject = new GameObject("Cost");
+        costObject.transform.SetParent(cardObject.transform); //设置父游戏对象为卡牌的游戏对象
+
+        //添加一个矩形变换组件，设置卡牌的费用文本的位置和大小
+        RectTransform costTransform = costObject.AddComponent<RectTransform>();
+        costTransform.anchoredPosition = new Vector2(-40, 60);
+        costTransform.sizeDelta = new Vector2(20, 20);
+
+        //添加一个画布渲染器组件，使卡牌的费用文本可以显示在画布上
+        costObject.AddComponent<CanvasRenderer>();
+
+        //添加一个文本组件，设置卡牌的费用文本的内容和样式
+        costText = costObject.AddComponent<Text>();
+        costText.text = cost.ToString(); //设置文本内容为卡牌的费用
+        costText.font = Resources.Load<Font>("Arial"); //设置文本字体为Arial
+        costText.fontSize = 16; //设置文本字号为16
+        costText.color = Color.white; //设置文本颜色为白色
+        costText.alignment = TextAnchor.MiddleCenter; //设置文本对齐方式为居中
+
+        //创建一个子游戏对象，作为卡牌的品质图片
+        GameObject qualityObject = new GameObject("Quality");
+        qualityObject.transform.SetParent(cardObject.transform); //设置父游戏对象为卡牌的游戏对象
+
+        //添加一个矩形变换组件，设置卡牌的品质图片的位置和大小
+        RectTransform qualityTransform = qualityObject.AddComponent<RectTransform>();
+        qualityTransform.anchoredPosition = new Vector2(0, -60);
+        qualityTransform.sizeDelta = new Vector2(20, 20);
+
+        //添加一个画布渲染器组件，使卡牌的品质图片可以显示在画布上
+        qualityObject.AddComponent<CanvasRenderer>();
+
+        //添加一个图像组件，设置卡牌的品质图片的内容
+        qualityImage = qualityObject.AddComponent<Image>();
+        switch (quality) //根据卡牌的品质，从资源文件夹中加载不同的图片
+        {
+            case CardQuality.Common:
+                qualityImage.sprite = Resources.Load<Sprite>("Common");
+                break;
+            case CardQuality.Rare:
+                qualityImage.sprite = Resources.Load<Sprite>("Rare");
+                break;
+            case CardQuality.Epic:
+                qualityImage.sprite = Resources.Load<Sprite>("Epic");
+                break;
+            case CardQuality.Legendary:
+                qualityImage.sprite = Resources.Load<Sprite>("Legendary");
+                break;
+        }
+
+        //创建一个子游戏对象，作为卡牌的卡面图片
+        GameObject cardObject = new GameObject("Card");
+        cardObject.transform.SetParent(cardObject.transform); //设置父游戏对象为卡牌的游戏对象
+
+        //添加一个矩形变换组件，设置卡牌的卡面图片的位置和大小
+        RectTransform cardTransform = cardObject.AddComponent<RectTransform>();
+        cardTransform.anchoredPosition = Vector2.zero;
+        cardTransform.sizeDelta = new Vector2(80, 120);
+
+        //添加一个画布渲染器组件，使卡牌的卡面图片可以显示在画布上
+        cardObject.AddComponent<CanvasRenderer>();
+
+        //添加一个图像组件，设置卡牌的卡面图片的内容
+        cardImage = cardObject.AddComponent<Image>();
+        cardImage.sprite = image; //设置图片内容为卡牌的图片
+    }
+
+    //展示卡牌的游戏对象，将卡牌的游戏对象添加到画布上
+    public void ShowCardObject()
+    {
+        //获取画布的游戏对象
+        GameObject canvasObject = GameObject.Find("Canvas");
+
+        //将卡牌的游戏对象的父游戏对象设置为画布的游戏对象
+        cardObject.transform.SetParent(canvasObject.transform);
+    }
+
+    //使用卡牌的方法，根据卡牌的种类和效果，执行相应的逻辑
+    public void UseCard()
+    {
+        switch (type) //根据卡牌的种类，执行不同的逻辑
+        {
+            case CardType.Minion: //如果是随从卡，就
