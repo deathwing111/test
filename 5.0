@@ -1,0 +1,213 @@
+using System;
+using System.Collections.Generic;
+
+// 定义攻击性实体的接口
+public interface IAttackable
+{
+    // 检查实体是否可以攻击
+    bool CanAttack();
+
+    // 攻击另一个实体
+    void Attack(IAttackable target);
+
+    // 受到来自攻击者的伤害
+    void TakeDamage(IAttackable attacker, int damage);
+}
+
+// 定义卡牌类
+public class Card
+{
+    // 卡牌属性
+    public string Name { get; set; }
+    public string Type { get; set; }
+    public int Cost { get; set; }
+    public Action<Player> Effect { get; set; }
+
+    // 构造函数
+    public Card(string name, string type, int cost, Action<Player> effect)
+    {
+        Name = name; // 字符串
+        Type = type; // 字符串
+        Cost = cost; // 整数
+        Effect = effect; // 函数
+    }
+}
+
+// 定义随从类
+public class Minion : Card, IAttackable
+{
+    // 随从属性
+    public int Attack { get; set; }
+    public int Health { get; set; }
+
+    // 构造函数
+    public Minion(string name, int cost, Action<Player> effect, int attack, int health)
+        : base(name, "Minion", cost, effect)
+    {
+        Attack = attack; // 整数
+        Health = health; // 整数
+    }
+
+    // 检查随从是否可以攻击
+    public bool CanAttack()
+    {
+        // TODO: 实现随从攻击的条件
+        return false;
+    }
+
+    // 攻击另一个随从或敌方英雄
+    public void Attack(IAttackable target)
+    {
+        // TODO: 实现随从攻击的逻辑
+    }
+
+    // 受到来自攻击者的伤害
+    public void TakeDamage(IAttackable attacker, int damage)
+    {
+        Health -= damage; // 减少生命值
+        if (!IsAlive()) // 如果随从死亡
+        {
+            // TODO: 实现移除随从的逻辑
+        }
+    }
+
+    // 恢复随从的生命值
+    public void Heal(int amount)
+    {
+        Health += amount; // 增加生命值
+        // TODO: 实现生命值上限的条件
+    }
+
+    // 检查随从是否仍然存活
+    public bool IsAlive()
+    {
+        return Health > 0; // 如果生命值为正，返回true；否则返回false
+    }
+}
+
+// 定义法术类
+public class Spell : Card
+{
+    // 构造函数
+    public Spell(string name, int cost, Action<Player> effect)
+        : base(name, "Spell", cost, effect)
+    {
+        // 调用父类构造函数
+    }
+}
+
+// 定义武器类
+public class Weapon : Card
+{
+    // 武器属性
+    public int Attack { get; set; }
+    public int Durability { get; set; }
+
+    // 构造函数
+    public Weapon(string name, int cost, Action<Player> effect, int attack, int durability)
+        : base(name, "Weapon", cost, effect)
+    {
+        Attack = attack; // 整数
+        Durability = durability; // 整数
+    }
+
+    // 检查武器是否可以使用
+    public bool CanUse()
+    {
+        return Durability > 0; // 如果耐久度为正，返回true；否则返回false
+    }
+
+    // 使用武器攻击目标
+    public void Use(IAttackable target)
+    {
+        // TODO: 实现使用武器的逻辑
+    }
+
+    // 受到来自攻击者的伤害
+    public void TakeDamage(IAttackable attacker, int damage)
+    {
+        Durability -= damage; // 减少耐久度
+        if (!CanUse()) // 如果武器损坏
+        {
+            // TODO: 实现移除英雄上的武器的逻辑
+        }
+    }
+}
+
+// 定义地点类
+public class Location : Card
+{
+    // 构造函数
+    public Location(string name, int cost, Action<Player> effect)
+        : base(name, "Location", cost, effect)
+    {
+        // 调用父类构造函数
+    }
+}
+
+// 定义英雄卡类
+public class HeroCard : Card
+{
+    // 英雄卡属性
+    public Hero NewHero { get; set; }
+    public int Armor { get; set; }
+
+    // 构造函数
+    public HeroCard(string name, int cost, Action<Player> effect, Hero newHero, int armor)
+        : base(name, "Hero", cost, effect)
+    {
+        NewHero = newHero; // Hero对象
+        Armor = armor; // 整数
+    }
+}
+
+// 定义英雄技能类
+public class HeroPower
+{
+    // 英雄技能属性
+    public string Name { get; set; }
+    public Action<Player> Effect { get; set; }
+
+    // 构造函数
+    public HeroPower(string name, Action<Player> effect)
+    {
+        Name = name; // 字符串
+        Effect = effect; // 函数
+    }
+
+    // 检查英雄技能是否可以使用
+    public bool CanUse()
+    {
+        // TODO: 实现使用英雄技能的条件
+        return false;
+    }
+}
+
+// 定义英雄类
+public class Hero : IAttackable
+{
+    // 英雄属性
+    public string Name { get; set; }
+    public int Health { get; set; }
+    public HeroPower Power { get; set; }
+
+    // 构造函数
+    public Hero(string name, int health, HeroPower power)
+    {
+        Name = name; // 字符串
+        Health = health; // 整数
+        Power = power; // HeroPower对象
+    }
+
+    // 检查英雄是否仍然存活
+    public bool IsAlive()
+    {
+        return Health > 0; // 如果生命值为正，返回true；否则返回false
+    }
+
+    // 受到来自攻击者的伤害
+    public void TakeDamage(IAttackable attacker, int damage)
+    {
+        Health -= damage; // 减少生命值
+        if (!IsAlive()) // 如果英雄死亡
+       
