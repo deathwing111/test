@@ -1,0 +1,64 @@
+using UnityEngine;
+
+public class Minion : MonoBehaviour, IAttackable
+{
+    // Unity SerializedFields for inspector visibility
+    [SerializeField] private int attack;
+    [SerializeField] private int health;
+
+    // Properties for the minion's attributes
+    public int Attack
+    {
+        get { return attack; }
+        set { attack = value; }
+    }
+
+    public int Health
+    {
+        get { return health; }
+        set { health = value; }
+    }
+
+    // Unity Start method
+    void Start()
+    {
+        // Initialization logic, if needed
+    }
+
+    // Check if the minion can attack
+    public bool CanAttack()
+    {
+        // TODO: Implement the condition for attacking with the minion
+        return false;
+    }
+
+    // Attack another minion or the enemy hero
+    public void Attack(IAttackable target)
+    {
+        // TODO: Implement the logic for attacking with the minion
+    }
+
+    // Take damage from an attacker
+    public void TakeDamage(IAttackable attacker, int damage)
+    {
+        Health -= damage; // Reduce the health by the damage
+        if (!IsAlive()) // If the minion is dead
+        {
+            // TODO: Implement the logic for removing the minion from the board
+            Destroy(gameObject);
+        }
+    }
+
+    // Heal the minion by an amount
+    public void Heal(int amount)
+    {
+        Health += amount; // Increase the health by the amount
+        // TODO: Implement the health limit condition
+    }
+
+    // Check if the minion is alive
+    public bool IsAlive()
+    {
+        return Health > 0; // Return true if the health is positive, false otherwise
+    }
+}
