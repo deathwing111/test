@@ -1,0 +1,60 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+public class Player : MonoBehaviour
+{
+    // Unity SerializedFields for inspector visibility
+    [SerializeField] private Hero heroPrefab;
+    [SerializeField] private List<Card> deckPrefab;
+
+    // Properties for the player's attributes
+    public Hero Hero { get; set; }
+    public List<Card> Deck { get; set; }
+    public List<Card> Hand { get; set; }
+    public int Mana { get; set; }
+
+    // Unity Start method
+    void Start()
+    {
+        // Initialization logic, if needed
+        InitializePlayer();
+    }
+
+    // Draw a card from the deck and add it to the hand
+    public void Draw()
+    {
+        if (Deck.Count > 0) // If the deck is not empty
+        {
+            Card card = Deck[Deck.Count - 1]; // Remove the last card from the deck
+            Deck.RemoveAt(Deck.Count - 1);
+            Hand.Add(card); // Add the card to the hand
+        }
+        else // If the deck is empty
+        {
+            // TODO: Implement the game over condition
+            Debug.Log("Game Over - Deck is empty!");
+        }
+    }
+
+    // Gain one mana crystal, up to a maximum of 10
+    public void GainMana()
+    {
+        if (Mana < 10) // If the mana is less than 10
+        {
+            Mana++; // Increase the mana by 1
+        }
+    }
+
+    // Play a card from the hand by spending mana equal to the card’s cost
+    public void Play(Card card)
+    {
+        if (Hand.Contains(card) && card.Cost <= Mana) // If the card is in the hand and the player has enough mana
+        {
+            Hand.Remove(card); // Remove the card from the hand
+            Mana -= card.Cost; // Reduce the mana by the card’s cost
+            card.Effect(this); // Apply the card’s effect
+        }
+    }
+
+    // ... (Other methods and logic)
+}
